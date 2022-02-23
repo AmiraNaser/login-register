@@ -1,83 +1,3 @@
-<?php
-require './admin/helpers/dbConnection.php';
-require './admin/helpers/functions.php';
-
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-  $fname     = Clean($_POST['fname']);
-  $lname     = Clean($_POST['lname']);
-  $email    = Clean($_POST['email']);
-  $password = Clean($_POST['password'], 1);
-  $phone    = Clean($_POST['phone']);
-  $address    = Clean($_POST['address']);
-
-
-    # Validate Input ... 
-
-    $errors = [];
-    # Validate FName ... 
-    if (!validate($fname, 1)) {
-        $errors['FName'] = " First Name Required";
-    }elseif (!validate($fname, 8)) {
-        $errors['FName'] = " first name Invalid String  ";
-    }
-    # Validate LName ... 
-    if (!validate($lname, 1)) {
-        $errors['LName'] = " Last Name Required";
-    }elseif (!validate($lname, 8)) {
-        $errors['LName'] = " last name Invalid String  ";
-    }
-
-
-    # Validate Email .... 
-    if (!validate($email, 1)) {
-        $errors['Email'] = " Email Required";
-    } elseif (!validate($email, 2)) {
-        $errors['Email'] = " Email Invalid Field";
-    }
-
-    # Validate Password 
-    if (!validate($password, 1)) {
-        $errors['Password'] = " Password Required";
-    } elseif (!validate($password, 3)) {
-        $errors['Password'] = " Password Length Must be >= 6 Chars";
-    }
-
-    #validate Phone 
-    if (!validate($phone, 1)) {
-        $errors['Phone'] = " Phone Required ";
-    }
-    elseif((!validate($phone, 9))){
-        $errors['Phone'] = "Invalide Phone";
-    }
-
-    #validate address 
-    if (!validate($address, 1)) {
-        $errors['Address'] = " Address Required ";
-    }
-
-    # Check Errors 
-    if (count($errors) > 0) {
-      $_SESSION['Message'] = $errors;
-    }
-    else {
-      # logic .... 
-      $password = md5($password);
-      $registerTime = time();
-      $image        = 'profile-icon-png-898.png';
-      $sql = "insert into user (firstName,lastName,email,password,phone,address,image,registeredDate,role_id)
-       values ('$fname' , '$lname', '$email' ,'$password','$phone','$address','$image',$registerTime,5)";
-      $op  = mysqli_query($con, $sql);
-      if ($op) {
-          $message = ["Raw Inserted"];
-      } else {
-          $message = ["Error Try Again"];
-      
-      $_SESSION['Message'] = $message;
-        
-    }    
-}
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -107,11 +27,6 @@ background-size: cover;
 </style>
   </head>
   <body>
-            <?php
-
-            displayMessages();
-
-            ?>
     <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
         <div class="row w-100 m-0">
@@ -119,31 +34,19 @@ background-size: cover;
             <div class="card col-lg-4 mx-auto">
               <div class="card-body px-5 py-5">
                 <h3 class="card-title text-left mb-3">Register</h3>
-                <form action="<?php  echo htmlspecialchars($_SERVER['PHP_SELF']);?>"   method="POST">
+                <form>
                   <div class="form-group">
-                    <label>First Name</label>
-                    <input type="text" class="form-control p_input" name = "fname">
+                    <label>Username</label>
+                    <input type="text" class="form-control p_input">
                   </div>
                   <div class="form-group">
-                    <label>Last Name</label>
-                    <input type="text" class="form-control p_input" name = "lname">
-                  </div>                  
-                  <div class="form-group">
                     <label>Email</label>
-                    <input type="email" class="form-control p_input" name = "email">
+                    <input type="email" class="form-control p_input">
                   </div>
                   <div class="form-group">
                     <label>Password</label>
-                    <input type="password" class="form-control p_input" name = "password">
+                    <input type="password" class="form-control p_input">
                   </div>
-                  <div class="form-group">
-                    <label>Phone</label>
-                    <input type="text" class="form-control p_input" name = "phone">
-                  </div>  
-                  <div class="form-group">
-                    <label>Address</label>
-                    <input type="text" class="form-control p_input" name = "address">
-                  </div>                                      
                   <div class="form-group d-flex align-items-center justify-content-between">
                     <div class="form-check">
                       <label class="form-check-label">
@@ -152,7 +55,7 @@ background-size: cover;
                     <a href="#" class="forgot-pass">Forgot password</a>
                   </div>
                   <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-block enter-btn">Register</button>
+                    <button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
                   </div>
                   <div class="d-flex">
                     <button class="btn btn-facebook col mr-2">
@@ -160,7 +63,7 @@ background-size: cover;
                     <button class="btn btn-google col">
                       <i class="mdi mdi-google-plus"></i> Google plus </button>
                   </div>
-                  <p class="sign-up text-center">Already have an Account?<a href="#"> Sign In</a></p>
+                  <p class="sign-up text-center">Already have an Account?<a href="#"> Sign Up</a></p>
                   <p class="terms">By creating an account you are accepting our<a href="#"> Terms & Conditions</a></p>
                 </form>
               </div>
